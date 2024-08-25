@@ -6,10 +6,7 @@ import io.th0rgal.oraxen.items.ItemBuilder;
 import io.th0rgal.oraxen.items.ItemParser;
 import io.th0rgal.oraxen.items.ItemTemplate;
 import io.th0rgal.oraxen.items.ModelData;
-import io.th0rgal.oraxen.utils.AdventureUtils;
-import io.th0rgal.oraxen.utils.OraxenYaml;
-import io.th0rgal.oraxen.utils.Utils;
-import io.th0rgal.oraxen.utils.VersionUtil;
+import io.th0rgal.oraxen.utils.*;
 import io.th0rgal.oraxen.utils.logs.Logs;
 import net.kyori.adventure.key.Key;
 import org.apache.commons.io.FileUtils;
@@ -281,6 +278,13 @@ public class ConfigsManager {
         if (model.isEmpty() && packSection.getBoolean("generate_model", false)) {
             model = packSection.getParent().getName();
         }
+
+        if (!model.matches("[a-z0-9/._-]+")) {
+            Logs.logWarning("Found invalid model in OraxenItem <blue>" + packSection.getParent().getName() + "</blue>: <aqua>" + model);
+            Logs.logWarning("Model-paths must only contain characters <yellow>[a-z0-9/._-]");
+            return KeyUtils.MALFORMED_KEY_PLACEHOLDER;
+        }
+
         return Key.key(model);
     }
 
